@@ -3,7 +3,57 @@ import React from 'react'
 import { useGlobalContext } from './context'
 
 const Stories = () => {
-  return <h2>stories component</h2>
+  const { isLoading, hits, error, removeStory } = useGlobalContext()
+
+  if (isLoading) return <div className='loading' />
+
+  if (error) {
+    return (
+      <h1
+        style={{
+          color: 'red',
+          textAlign: 'center',
+          marginTop: '5rem',
+        }}
+      >
+        {error}
+      </h1>
+    )
+  }
+
+  return (
+    <section className='stories'>
+      {hits.map((story) => {
+        const { objectID, title, num_comments, url, points, author } = story
+
+        return (
+          <article key={objectID} className='story'>
+            <h4 className='title'>{title}</h4>
+            <p className='info'>
+              {points} points by <span>{author} | </span>
+              {num_comments}
+            </p>
+            <div>
+              <a
+                href={url}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='read-link'
+              >
+                read more
+              </a>
+              <button
+                className='remove-btn'
+                onClick={() => removeStory(objectID)}
+              >
+                remove
+              </button>
+            </div>
+          </article>
+        )
+      })}
+    </section>
+  )
 }
 
 export default Stories
